@@ -7,15 +7,17 @@
 \usepackage{lscape}
 \usepackage{longtable}
 \usepackage{pgfplots}
+\usepackage[titletoc]{appendix}
 \pgfplotsset{width=10cm,compat=1.9}
 \usepgfplotslibrary{external}
 \tikzexternalize
 \usepackage[utf8]{inputenc}
 \usepackage[brazil]{babel}
 \usepackage[latin1]{inputenc}  
-
+\usepackage{pdfpages}
 \usepackage{listings}
 \usepackage{color}
+
 
 %New colors defined below
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -53,6 +55,7 @@
 }
 
 \begin{document} 
+\includepdf{Template_SBC/file.pdf}
 
 \maketitle
 
@@ -109,6 +112,18 @@ While the bradth search uses a FIFO, the depth search uses a LIFO.
 According to \cite{russell2004inteligencia},an informed search strategy uses knowledge of a specific problem in addition to the definition of the problem itself and can find solutions more efficiently than a search strategy without information. In the case of path problem, they know if a non-objective state is “more promising” than another.
 
 \subsubsection{A*}
+This method it them most widely know form of solution to the search for the best choice.
+It evaluates the nodes by combining:
+\begin{itemize}
+    \item $g(n)$, the cost to reach the node. Gives the cost of the path from the initial node to the node n
+    \item $h(n)$, the cost to get from the node to the objective
+\end{itemize}
+\begin{center}
+    $f(n) = g(n) + h(n)$
+\end{center}
+
+So $f(n)$ is the estimated cost of the solution with the lowest cost through $n$.
+To find the lowest cost solution,it would be reasonable to try the node with the lowest value of $f(n)$ . As long as the heuristic function $h(n)$ satisfies certain conditions, the A * search will be complete and optimal. The algorithm is identical to the uniform cost search, except that A * uses $g + h$ instead of $g$ \cite{russell2004inteligencia}.
 \lstinputlisting[language=C++, caption=A* algorithm]{codes/Aasterisk.hpp}
 
 \subsubsection{Hill Climbing}
@@ -517,5 +532,11 @@ The cost of a path is the sum of the costs of its edges.\cite{ahuja1990faster}
 \clearpage
 \bibliographystyle{sbc}
 \bibliography{sbc-template}
+\clearpage
 
+\begin{appendices}
+  \section{Consectetur adipiscing elit}
+  \lstinputlisting[language=C++, caption=Hill Climbing algorithm]{codes/main.cpp}
+\end{appendices}
+\includepdf{Template_SBC/contra-capa.pdf}
 \end{document}
