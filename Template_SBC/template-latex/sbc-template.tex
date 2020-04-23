@@ -44,7 +44,7 @@
 \lstset{style=mystyle}
 \sloppy
 
-\title{Comparison between algorithms for the shortest pathproblem\\ }
+\title{Comparison of Path Planning Algorithms\\ }
 \author{Karelia A. Vilca\inst{1}}
 
 \address{Instituto de Ciências Matemáticas e de Computação -- Universidade de São Paulo
@@ -57,53 +57,86 @@
 \maketitle
 
 \begin{abstract}
-  This meta-paper describes the style to be used in articles and short papers
-  for SBC conferences. For papers in English, you should add just an abstract
-  while for the papers in Portuguese, we also ask for an abstract in
-  Portuguese (``resumo''). In both cases, abstracts should not have more than
-  10 lines and must be in the first page of the paper.
+
 \end{abstract}
-     
-\begin{resumo} 
-  Este meta-artigo descreve o estilo a ser usado na confecção de artigos e
-  resumos de artigos para publicação nos anais das conferências organizadas
-  pela SBC. É solicitada a escrita de resumo e abstract apenas para os artigos
-  escritos em português. Artigos em inglês deverão apresentar apenas abstract.
-  Nos dois casos, o autor deve tomar cuidado para que o resumo (e o abstract)
-  não ultrapassem 10 linhas cada, sendo que ambos devem estar na primeira
-  página do artigo.
-\end{resumo}
+
+\section{Introduction}
+Road planning is a widely investigated problem, there are multiple investigations such as robotics \cite{shwail2013probabilistic}, route optimization, etc. Likewise, there are different solution algorithms proposed, including informed and non-informed searches, as well as proposals that mix methods such as \cite{felner2003kbfs}.
+
+The objective of the present work is to compare the performance of 4 algorithms, depth-first search, breadth-first search, A* and hill climbing applied in the road planning problem between two points. The implementation allows indicating a number of nodes and choosing between constructing a complete graph or not and provides the routes taken and details of time, cost, etc.
+
+In this work some of the typical problems such as "Shortest path problem" and "Travel Salesman Problem" are explained. Next, two blind search algorithms and two heuristic algorithms are explained. Then implementation details are explained. And finally the results obtained are shown and compared.
 
 
-\section{General Information}
 
-All full papers and posters (short papers) submitted to some SBC conference,
-including any supporting documents, should be written in English or in
-Portuguese. The format paper should be A4 with single column, 3.5 cm for upper
-margin, 2.5 cm for bottom margin and 3.0 cm for lateral margins, without
-headers or footers. The main font must be Times, 12 point nominal size, with 6
-points of space before each paragraph. Page numbers must be suppressed.
+\section{Path planning problems}
+The routing problem is defined in terms of specified positions and transitions over links between them \cite{russell2004inteligencia}. 
+To represent this type of problem, graphs or trees are used as data structures and the objective is achieved through search algorithms.
+They can vary in the restriction of going through all the points or finding the direct route as the well-known road problem from Arad to Bucharest \cite{russell2004inteligencia}, likewise some methods find any possible way and others try to optimize finding the least expensive solution. Some of the problems are listed below.
+\subsection{Shortest path problem}
+Let $G =  (V, E)$ be a graph with  vertex  set $V$ of size $n$ and arc set $E$ of size $m$. Let $s$ be a distinguished  vertex  of $G$ and let c be a function  assigning a non negative  real valued cost to each arc of $G$. We denote the cost by $c(v,w)$. The single-source shortest path problem is that  of computing, for each vertex  $v$ reachable from  $S$, the cost of a minimum-cost  path  from  $s$ to  $v$ \cite{ahuja1990faster}. 
 
-Full papers must respect the page limits defined by the conference.
-Conferences that publish just abstracts ask for \textbf{one}-page texts.
+There are variations of this problem explained in \cite{dreyfus1969appraisal}; for example the shortest path problem between a specified pair of nodes or between all pair of nodes of a network. In 1959 Dijkstra \cite{dijkstra1959note} described The most efficient procedure  for for this problem. 
 
+\subsection{Travel Salesman Problem}
+\cite{little1963algorithm} describe this problem as s salesman, starting in one city, wishes to visit each of n-1 other cities and return to the start. In what order should he visit the cities to minimize the total distance traveled? Distance (time or cost) or costs between all city pairs are presumed known.
 
-\section{Algoritmos}
+It is closely related to the hamiltonian-cycle problem and that's why it's considered NP-complete \cite{cormen2009introduction}. Reference \cite{bellmore1968traveling} discusses methods of solution including Dynamic Programming.
 
-\subsection{DFS}
-\cite{tarjan1972depth}
+\section{Algorithms}
+There are different algorithms for traversing or searching tree or graph data structures. For the search task, they can be grouped into blind search algorithms and algorithms of heuristic search.
+
+\subsection{Blind Search Algorithms (Uninformed)}
+According to \cite{russell2004inteligencia}, these strategies do not have additional information on states, as well as those provided by the definition of the problem. All search strategies are distinguished by the order in which we are expanded. An example shows DFS and BFS.
+
+\subsubsection{Depth-first search (DFS)}
+It was invented by Charles Pierre Trémaux (1859-1882) \cite{tremaux2010ecole} as a maze solving algorithm.
+This algorithm implies, to search “deeper” in the graph whenever possible \cite{cormen2009introduction} and
+considers the following choice rule: when selecting an
+edge to traverse, always choose an edge emanating from the vertex most recently reached which still has unexplored edges \cite{tarjan1972depth}.
+It is neither complete nor optimal, but it has linear spatial complexity \cite{russell2004inteligencia}.
+
+In implementation terms it uses one LIFO stack, it means that the most recently generated node is chosen for expansion \cite{russell2004inteligencia}.
+
 \lstinputlisting[language=C++, caption=DFS algorithm]{codes/DFS.hpp}
 %\clearpage
-\subsection{BFS}
+\subsubsection{Breadth-first search (BFS)}
+This method selects the shallow nodes for expansion; it is complete, great for unit cost steps, but it has exponential time complexity \cite{russell2004inteligencia}.
+While the bradth search uses a FIFO, the depth search uses a LIFO. 
 \lstinputlisting[language=C++, caption=BFS algorithm]{codes/BFS.hpp}
 
-\subsection{A*}
+\subsection{Heuristic Search Algorithms (Informed)}
+According to \cite{russell2004inteligencia},an informed search strategy uses knowledge of a specific problem in addition to the definition of the problem itself and can find solutions more efficiently than a search strategy without information. In the case of path problem, they know if a non-objective state is “more promising” than another.
+
+\subsubsection{A*}
 \lstinputlisting[language=C++, caption=A* algorithm]{codes/Aasterisk.hpp}
 
-\subsection{Hill Climbing}
+\subsubsection{Hill Climbing}
 \lstinputlisting[language=C++, caption=Hill Climbing algorithm]{codes/HillClimbing.hpp}
 
-\subsection{Comparision}
+\subsection{Comparison}
+Following \cite{Maharshi2018ComparativeAO}, \cite{HLweb} and \cite{stuart2003artificial}, the performance of the algorithms can be compared based on the following parameters:
+\begin{itemize}
+    \item Time complexity: Time taken to find a solution.
+    \item Space complexity: Memory required to perform the search.
+    \item Optimality: Solution provided by the algorithm will always be optimal or not.
+    \item Completeness: Always find the solution if it exists?
+\end{itemize}
+\begin{longtable}[c]{|c|c|c|c|c|}
+\hline
+\textbf{Algorithm}        & \textbf{DFS} & \textbf{BFS} & \textbf{A*} & \textbf{Hill Climbing} \\ \hline
+\endhead
+%
+\textbf{Time Complexity}  & $O(b^{m})$   & $O(b^{d})$   & $O(b^{m})$  & $O(\infty)$            \\ \hline
+\textbf{Space Complexity} & $O(bm)$      & $O(b^{d})$   & $O(b^{m})$  & $O(b^{m})$             \\ \hline
+\textbf{Optimality}       & No           & Yes          & Yes         & No                     \\ \hline
+\textbf{Completeness}     & No           & Yes          & Yes         & No                     \\ \hline
+\caption{}
+\label{tab:my-table}\\
+\end{longtable}
+
+
+\section{Implementation details}
 \begin{lstlisting}[language=C++, caption=Build graph and tree]
 void Build_graph()
 {	
@@ -175,50 +208,9 @@ void Build_tree()
     Build_tree();
   	Algorithms();
 \end{lstlisting}
-\section{First Page} \label{sec:firstpage}
-
-The first page must display the paper title, the name and address of the
-authors, the abstract in English and ``resumo'' in Portuguese (``resumos'' are
-required only for papers written in Portuguese). The title must be centered
-over the whole page, in 16 point boldface font and with 12 points of space
-before itself. Author names must be centered in 12 point font, bold, all of
-them disposed in the same line, separated by commas and with 12 points of
-space after the title. Addresses must be centered in 12 point font, also with
-12 points of space after the authors' names. E-mail addresses should be
-written using font Courier New, 10 point nominal size, with 6 points of space
-before and 6 points of space after.
-
-The abstract and ``resumo'' (if is the case) must be in 12 point Times font,
-indented 0.8cm on both sides. The word \textbf{Abstract} and \textbf{Resumo},
-should be written in boldface and must precede the text.
-
-\section{CD-ROMs and Printed Proceedings}
-
-In some conferences, the papers are published on CD-ROM while only the
-abstract is published in the printed Proceedings. In this case, authors are
-invited to prepare two final versions of the paper. One, complete, to be
-published on the CD and the other, containing only the first page, with
-abstract and ``resumo'' (for papers in Portuguese).
-
-\section{Sections and Paragraphs}
-
-Section titles must be in boldface, 13pt, flush left. There should be an extra
-12 pt of space before each title. Section numbering is optional. The first
-paragraph of each section should not be indented, while the first lines of
-subsequent paragraphs should be indented by 1.27 cm.
-
-\subsection{Subsections}
-
-The subsection titles must be in boldface, 12pt, flush left.
-
-\section{Figures and Captions}\label{sec:figs}
-
-
-Figure and table captions should be centered if less than one line
-(Figure~\ref{fig:exampleFig1}), otherwise justified and indented by 0.8cm on
-both margins, as shown in Figure~\ref{fig:exampleFig2}. The caption font must
-be Helvetica, 10 point, boldface, with 6 points of space before and after each
-caption.
+\subsection{Cost}
+The cost of a path is the sum of the costs of its edges.\cite{ahuja1990faster}
+\subsection{Visualization}
 
 \begin{figure}[ht]
 \centering
@@ -229,43 +221,23 @@ caption.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=1.0\textwidth]{Template_SBC/template-latex/screen2.png}
+\includegraphics[width=1.0\textwidth]{Template_SBC/template-latex/grafoc.png}
 \caption{This figure is an example of a figure caption taking more than one
   line and justified considering margins mentioned in Section~\ref{sec:figs}.}
 \label{fig:exampleFig2}
 \end{figure}
 
-In tables, try to avoid the use of colored or shaded backgrounds, and avoid
-thick, doubled, or unnecessary framing lines. When reporting empirical data,
-do not use more decimal digits than warranted by their precision and
-reproducibility. Table caption must be placed before the table (see Table 1)
-and the font used must also be Helvetica, 10 point, boldface, with 6 points of
-space before and after each caption.
-
-\begin{table}[ht]
+\begin{figure}[ht]
 \centering
-\caption{Variables to be considered on the evaluation of interaction
-  techniques}
-\label{tab:exTable1}
-\includegraphics[width=.7\textwidth]{table.jpg}
-\end{table}
+\includegraphics[width=1.0\textwidth]{Template_SBC/template-latex/grafonc.png}
+\caption{This figure is an example of a figure caption taking more than one
+  line and justified considering margins mentioned in Section~\ref{sec:figs}.}
+\label{fig:exampleFig2}
+\end{figure}
 
-\section{Images}
 
-All images and illustrations should be in black-and-white, or gray tones,
-excepting for the papers that will be electronically available (on CD-ROMs,
-internet, etc.). The image resolution on paper should be about 600 dpi for
-black-and-white images, and 150-300 dpi for grayscale images.  Do not include
-images with excessive resolution, as they may take hours to print, without any
-visible difference in the result. 
 \section{Results}
-% Please add the following required packages to your document preamble:
-% \usepackage{multirow}
-% \usepackage[table,xcdraw]{xcolor}
-% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
-% \usepackage{lscape}
-% \usepackage{longtable}
-% Note: It may be necessary to compile the document several times to get a multi-page table to line up properly
+
 \begin{landscape}
 \begin{longtable}[c]{|c|c|l|l|l|l|l|l|l|l|l|l|l|l|}
 \hline
@@ -540,16 +512,9 @@ visible difference in the result.
 \end{axis}
 \end{tikzpicture}
 
-\section{References}
+\section{Conclusions}
 
-Bibliographic references must be unambiguous and uniform.  We recommend giving
-the author names references in brackets, e.g. \cite{knuth:84},
-\cite{boulic:91}, and \cite{smith:99}.
-
-The references must be listed using 12 point font size, with 6 points of space
-before each reference. The first line of each reference should not be
-indented, while the subsequent should be indented by 0.5 cm.
-
+\clearpage
 \bibliographystyle{sbc}
 \bibliography{sbc-template}
 
