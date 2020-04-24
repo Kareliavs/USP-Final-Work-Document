@@ -12,12 +12,12 @@
 \usepgfplotslibrary{external}
 \tikzexternalize
 \usepackage[utf8]{inputenc}
-\usepackage[brazil]{babel}
+%\usepackage[brazil]{babel}
 \usepackage[latin1]{inputenc}  
 \usepackage{pdfpages}
 \usepackage{listings}
 \usepackage{color}
-\usepackage[paper=portrait,pagesize]{typearea}
+\usepackage{pdflscape}
 
 %New colors defined below
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -63,8 +63,10 @@
 This paper aims to compare the depth-first search, breadth-first search, A * and hill climbing algorithms applied to the path planning problem between two points. For this, all the methods were implemented and they were tested in random graphs with a different number of nodes, these graphs can be complete or not. The program allows to visualize the graph and to know the execution time, the cost and the length of the path, data that are contrasted with theoretical parameters to determine which one best suits the problem. 
 \end{abstract}
 \section{Introduction}
-Road planning is a widely investigated problem, there are multiple investigations such as robotics \cite{shwail2013probabilistic}, route optimization, etc. Likewise, there are different solution algorithms proposed, including informed and non-informed searches, as well as proposals that mix methods such as \cite{felner2003kbfs}.\\
-The objective of the present work is to compare the performance of 4 algorithms, depth-first search, breadth-first search, A* and hill climbing applied in the road planning problem between two points. The implementation allows indicating a number of nodes and choosing between constructing a complete graph or not and provides the routes taken and details of time, cost, etc.\\
+Road planning is a widely investigated problem, there are multiple investigations such as robotics \cite{shwail2013probabilistic}, route optimization, etc. Likewise, there are different solution algorithms proposed, including informed and non-informed searches, as well as proposals that mix methods such as \cite{felner2003kbfs}.
+
+The objective of the present work is to compare the performance of 4 algorithms, depth-first search, breadth-first search, A* and hill climbing applied in the road planning problem between two points. The implementation allows indicating a number of nodes and choosing between constructing a complete graph or not and provides the routes taken and details of time, cost, etc.
+
 In this work some of the typical problems such as "Shortest path problem" and "Travel Salesman Problem" are explained. Next, two blind search algorithms and two heuristic algorithms are developed with implementation details. And finally the results obtained are shown and compared.
 
 \section{Path planning problems}
@@ -211,66 +213,6 @@ From the experiments we can deduce the following.
 \end{itemize}
 
 
-\subsection{Comparison}
-Following \cite{Maharshi2018ComparativeAO}, \cite{HLweb} and \cite{stuart2003artificial}, the performance of the algorithms can be compared based on the following parameters:
-\begin{itemize}
-    \item Time complexity: Time taken to find a solution.
-    \item Space complexity: Memory required to perform the search.
-    \item Optimality: Always find the minimum cost solution?
-    \item Completeness: Always find the solution if it exists?
-\end{itemize}
-\begin{longtable}[c]{|c|c|c|c|c|}
-\hline
-\textbf{Algorithm}        & \textbf{DFS} & \textbf{BFS} & \textbf{A*} & \textbf{Hill Climbing} \\ \hline
-\endhead
-%
-\textbf{Time Complexity}  & $O(b^{m})$   & $O(b^{d})$   & $O(b^{d})$  & $O(\infty)$            \\ \hline
-\textbf{Space Complexity} & $O(bm)$      & $O(b^{d})$   & $O(b^{d})$  & $O(b)$             \\ \hline
-\textbf{Optimality}       & No           & Yes          & Yes         & No                     \\ \hline
-\textbf{Completeness}     & No           & Yes          & Yes         & No                     \\ \hline
-\caption{Algorithm performance comparison}
-\label{tab:my-table}
-\end{longtable}
-This theoretical comparison is reflected in the tested experiments, the bar chart \ref{tab:bc} shows the performance synthesis of each method. Proving that heuristic methods considerably reduce the cost and size of the road. But as it was seen previously they do not always arrive at the solution. An analysis by theoretical parameter was made.
-\begin{itemize}
-    \item Time complexity: the times obtained and the theoretical ones do not completely agree, but the best performance is A*.
-    \item Space Complexity: This parameter was not considered in the experiments.
-    \item Optimality: Theory and experiments agree that A * finds the least expensive solution and that DFS does not. But this does not match in BFS and hill climbing.
-    \item Completeness: They coincide in BFS and Hill climbing. The latter presents more problems.
-\end{itemize}
-
-
-
-
-
-\begin{figure}[ht]
-\centering
-\begin{tikzpicture}[thick,scale=0.8, every node/.style={scale=0.8}]
-\begin{axis}[
-    ybar,
-    enlargelimits=0.15,
-    legend style={at={(0.5,-0.15)},
-      anchor=north,legend columns=-1},
-    ylabel={Average},
-    symbolic x coords={DFS,BFS,A*,HC},
-    xtick=data,
-    nodes near coords,
-    nodes near coords align={vertical},
-    ]
-\addplot coordinates {(DFS,879) (BFS,1549) (A*,3) (HC,2)};
-\addplot coordinates {(DFS,101) (BFS,0.2) (A*,36) (HC,37)};
-\addplot coordinates {(DFS,352) (BFS,643) (A*,0.1) (HC,0.2)};
-\legend{Path size,E. Time(ms),Cost/1000}
-\end{axis}
-\label{tab:bc}
-\end{tikzpicture}
-\caption{Algorithm performance comparison}
-\end{figure}
-\section{Conclusions}
-
-\newpage
-\KOMAoptions{paper=landscape,pagesize}
-\recalctypearea
 
 \begin{landscape}
 \begin{longtable}[c]{|c|c|l|l|l|l|l|l|l|l|l|l|l|l|}
@@ -527,9 +469,67 @@ This theoretical comparison is reflected in the tested experiments, the bar char
 \end{landscape}
 
 
+\subsection{Comparison}
+Following \cite{Maharshi2018ComparativeAO}, \cite{HLweb} and \cite{stuart2003artificial}, the performance of the algorithms can be compared based on the following parameters:
+\begin{itemize}
+    \item Time complexity: Time taken to find a solution.
+    \item Space complexity: Memory required to perform the search.
+    \item Optimality: Always find the minimum cost solution?
+    \item Completeness: Always find the solution if it exists?
+\end{itemize}
+\begin{longtable}[c]{|c|c|c|c|c|}
+\hline
+\textbf{Algorithm}        & \textbf{DFS} & \textbf{BFS} & \textbf{A*} & \textbf{Hill Climbing} \\ \hline
+\endhead
+%
+\textbf{Time Complexity}  & $O(b^{m})$   & $O(b^{d})$   & $O(b^{d})$  & $O(\infty)$            \\ \hline
+\textbf{Space Complexity} & $O(bm)$      & $O(b^{d})$   & $O(b^{d})$  & $O(b)$             \\ \hline
+\textbf{Optimality}       & No           & Yes          & Yes         & No                     \\ \hline
+\textbf{Completeness}     & No           & Yes          & Yes         & No                     \\ \hline
+\caption{Algorithm performance comparison}
+\label{tab:my-table}
+\end{longtable}
+This theoretical comparison is reflected in the tested experiments, the bar chart \ref{tab:bc} shows the performance synthesis of each method. Proving that heuristic methods considerably reduce the cost and size of the road. But as it was seen previously they do not always arrive at the solution. An analysis by theoretical parameter was made.
+\begin{itemize}
+    \item Time complexity: the times obtained and the theoretical ones do not completely agree, but the best performance is A*.
+    \item Space Complexity: This parameter was not considered in the experiments.
+    \item Optimality: Theory and experiments agree that A * finds the least expensive solution and that DFS does not. But this does not match in BFS and hill climbing.
+    \item Completeness: They coincide in BFS and Hill climbing. The latter presents more problems.
+\end{itemize}
 
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[thick,scale=0.8, every node/.style={scale=0.8}]
+\begin{axis}[
+    ybar,
+    enlargelimits=0.15,
+    legend style={at={(0.5,-0.15)},
+      anchor=north,legend columns=-1},
+    ylabel={Average},
+    symbolic x coords={DFS,BFS,A*,HC},
+    xtick=data,
+    nodes near coords,
+    nodes near coords align={vertical},
+    ]
+\addplot coordinates {(DFS,879) (BFS,1549) (A*,3) (HC,2)};
+\addplot coordinates {(DFS,101) (BFS,0.2) (A*,36) (HC,37)};
+\addplot coordinates {(DFS,352) (BFS,643) (A*,0.1) (HC,0.2)};
+\legend{Path size,E. Time(ms),Cost/1000}
+\end{axis}
+\label{tab:bc}
+\end{tikzpicture}
+\caption{Average of each metric for the 4 methods, the cost was divided into 1000 for practical purposes.}
+\end{figure}
+\section{Conclusions}
+\begin{itemize}
+    \item For the Shortest path problem, heuristic methods are better because they cost less.
+    \item The search algorithms blind do not give the most optimal path but they are more secure.
+    \item Incomplete graphs represent a greater challenge for heuristic methods.
+    \item In the experiments it was found that the best performance is hill climbing but it can be disqualified for not being complete.
+    \item A * has good performance and due to its optimality and completeness characteristics it can be considered the best option for the problem of finding paths between two points.
+\end{itemize}
 
-\clearpage
+%\clearpage
 \bibliographystyle{sbc}
 \bibliography{sbc-template}
 \clearpage
