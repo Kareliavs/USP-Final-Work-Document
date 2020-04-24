@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass[11pt]{article}
 
 \usepackage{sbc-template}
 \usepackage{graphicx,url}
@@ -17,7 +17,7 @@
 \usepackage{pdfpages}
 \usepackage{listings}
 \usepackage{color}
-
+\usepackage[paper=portrait,pagesize]{typearea}
 
 %New colors defined below
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -63,10 +63,8 @@
 This paper aims to compare the depth-first search, breadth-first search, A * and hill climbing algorithms applied to the path planning problem between two points. For this, all the methods were implemented and they were tested in random graphs with a different number of nodes, these graphs can be complete or not. The program allows to visualize the graph and to know the execution time, the cost and the length of the path, data that are contrasted with theoretical parameters to determine which one best suits the problem. 
 \end{abstract}
 \section{Introduction}
-Road planning is a widely investigated problem, there are multiple investigations such as robotics \cite{shwail2013probabilistic}, route optimization, etc. Likewise, there are different solution algorithms proposed, including informed and non-informed searches, as well as proposals that mix methods such as \cite{felner2003kbfs}.
-
-The objective of the present work is to compare the performance of 4 algorithms, depth-first search, breadth-first search, A* and hill climbing applied in the road planning problem between two points. The implementation allows indicating a number of nodes and choosing between constructing a complete graph or not and provides the routes taken and details of time, cost, etc.
-
+Road planning is a widely investigated problem, there are multiple investigations such as robotics \cite{shwail2013probabilistic}, route optimization, etc. Likewise, there are different solution algorithms proposed, including informed and non-informed searches, as well as proposals that mix methods such as \cite{felner2003kbfs}.\\
+The objective of the present work is to compare the performance of 4 algorithms, depth-first search, breadth-first search, A* and hill climbing applied in the road planning problem between two points. The implementation allows indicating a number of nodes and choosing between constructing a complete graph or not and provides the routes taken and details of time, cost, etc.\\
 In this work some of the typical problems such as "Shortest path problem" and "Travel Salesman Problem" are explained. Next, two blind search algorithms and two heuristic algorithms are developed with implementation details. And finally the results obtained are shown and compared.
 
 \section{Path planning problems}
@@ -159,32 +157,120 @@ Below is the pipeline and also the reference to the code attached in appendix \r
 The code is also available in the following Github repository \href{https://github.com/Kareliavs/-USP-IA-FinalWork}
 \begin{figure}[ht]
 \centering
-\includegraphics[width=1.0\textwidth]{Template_SBC/template-latex/screen.png}
-\caption{A typical figure}
+\includegraphics[width=0.8\textwidth]{Template_SBC/template-latex/screen.png}
+\caption{The screenshot shows the development of the program. On the right side, the console shows how the number of nodes is entered by text, in this case 10, if it is a complete graph or not, in this case not and the initial node, meta node and the output of each of the methods, detailing the nodes traveled, the path length, the execution time in milliseconds and the cost or distance. On the right side the graph is shown as specified in the input, in blue the nodes and edges of the original graph are shown. The path shown in this example is a BFS that, as indicated in console, passes through 5 nodes highlighted in magenta, the path is drawn in orange and the starting node is highlighted in red and the target node in white. You can alternate the different paths by keyboard. For each of the examples, both graphic and textual output are shown.}
 \label{fig:exampleFig1}
 \end{figure}
 
-
-
 \section{Experiments, results and comparison}
+\subsection{Experiments}
+In total 14 experiments were performed, for 7 different amounts of nodes (10, 50, 100, 500, 1000, 5000 and 10000) and for both complete and non-complete graphs. The program was restarted for each of the tests and the output data was recorded.
 
+The figure \ref{fig:exampleFig2} shows the visualizations of 5 complete graphs of 10, 50, 100, 500 and 1000 nodes. It should be noted that when the graph is denser, the paths can hardly be perceived with the zoom tool, therefore they are not shown in this image.
+The figure \ref{fig:exampleFig3} does the same for incomplete graphs of 10, 20, 50, 100 and 500 nodes. It can be seen that not all the nodes are linked, there is even the possibility that islands exist, this complicates the program but is also capable of detecting if there are no paths.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=1.0\textwidth]{Template_SBC/template-latex/grafoc.png}
-\caption{This figure is an example of a figure caption taking more than one
-  line and justified considering margins mentioned in Section~\ref{sec:figs}.}
+\includegraphics[width=0.7\textwidth]{Template_SBC/template-latex/grafoc.png}
+\caption{This figure shows a compilation of the complete graphs obtained in the experiments. The number of nodes is indicated in the upper left corner of each one.}
 \label{fig:exampleFig2}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=1.0\textwidth]{Template_SBC/template-latex/grafonc.png}
-\caption{This figure is an example of a figure caption taking more than one
-  line and justified considering margins mentioned in Section~\ref{sec:figs}.}
-\label{fig:exampleFig2}
+\includegraphics[width=0.7\textwidth]{Template_SBC/template-latex/grafonc.png}
+\caption{This figure shows the incomplete graphs generated from different experiments and the number of nodes of each one.}
+\label{fig:exampleFig3}
 \end{figure}
+\subsection{Results}
+The table \ref{tab:my-table} shows the path size, execution time in milliseconds and cost of each of the experiments. The methods and their metrics are shown in each column and the experiments in each row.
+The last row represents the average of the values in each column, for example the average run time for the 14 DFS experiments is 101,949 ms.
 
+There are also boxes highlighted in gray that indicate the best value per row for each of the 3 parameters, in case of a tie both are highlighted.
+In the case of 'Path size', the algorithm that achieves the objective in the fewest steps is considered the best, for 'E.Time (ms)' the one that performs the search in the shortest time is better and for 'Cost', the one that has a lower cost or distance.
+
+The color of the text is also an indicator. The red color indicates that a path has not been found, this was generally given in heuristic methods since they try to find the most optimal path and discard various possible paths or have are based on a local search without backtracking.
+The blue color highlights the best method for each experiment, based on the number of gray squares it has (better in some way), in case of a tie each metric is evaluated.
+The green color represents represents the best by exception, for example in the case of having incomplete paths the second best or third is chosen, discarding the incomplete ones. Or in case the gray squares are not concentrated in a method, each metric is evaluated.
+
+From the experiments we can deduce the following.
+\begin{itemize}
+    \item Method that has better characteristics
+    \begin{enumerate}
+    \item The hill climbing method was the best for 9 experiments, more than half.
+    \item The best method is followed by A * with 4 experiments won.
+    \item Finally, BFS has an experiment in which it is better, since the heuristic methods did not reach a path.
+    \end{enumerate}
+    \item{Completeness Problem: }Hill climbing failed twice and A * on 1 occasion
+    \item{Winner according to the metric}
+    \begin{enumerate}
+        \item Path Size: Hill Climbing
+        \item E.Time (ms): BFS
+        \item Cost: A *
+    \end{enumerate}
+\end{itemize}
+
+
+\subsection{Comparison}
+Following \cite{Maharshi2018ComparativeAO}, \cite{HLweb} and \cite{stuart2003artificial}, the performance of the algorithms can be compared based on the following parameters:
+\begin{itemize}
+    \item Time complexity: Time taken to find a solution.
+    \item Space complexity: Memory required to perform the search.
+    \item Optimality: Always find the minimum cost solution?
+    \item Completeness: Always find the solution if it exists?
+\end{itemize}
+\begin{longtable}[c]{|c|c|c|c|c|}
+\hline
+\textbf{Algorithm}        & \textbf{DFS} & \textbf{BFS} & \textbf{A*} & \textbf{Hill Climbing} \\ \hline
+\endhead
+%
+\textbf{Time Complexity}  & $O(b^{m})$   & $O(b^{d})$   & $O(b^{d})$  & $O(\infty)$            \\ \hline
+\textbf{Space Complexity} & $O(bm)$      & $O(b^{d})$   & $O(b^{d})$  & $O(b)$             \\ \hline
+\textbf{Optimality}       & No           & Yes          & Yes         & No                     \\ \hline
+\textbf{Completeness}     & No           & Yes          & Yes         & No                     \\ \hline
+\caption{Algorithm performance comparison}
+\label{tab:my-table}
+\end{longtable}
+This theoretical comparison is reflected in the tested experiments, the bar chart \ref{tab:bc} shows the performance synthesis of each method. Proving that heuristic methods considerably reduce the cost and size of the road. But as it was seen previously they do not always arrive at the solution. An analysis by theoretical parameter was made.
+\begin{itemize}
+    \item Time complexity: the times obtained and the theoretical ones do not completely agree, but the best performance is A*.
+    \item Space Complexity: This parameter was not considered in the experiments.
+    \item Optimality: Theory and experiments agree that A * finds the least expensive solution and that DFS does not. But this does not match in BFS and hill climbing.
+    \item Completeness: They coincide in BFS and Hill climbing. The latter presents more problems.
+\end{itemize}
+
+
+
+
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[thick,scale=0.8, every node/.style={scale=0.8}]
+\begin{axis}[
+    ybar,
+    enlargelimits=0.15,
+    legend style={at={(0.5,-0.15)},
+      anchor=north,legend columns=-1},
+    ylabel={Average},
+    symbolic x coords={DFS,BFS,A*,HC},
+    xtick=data,
+    nodes near coords,
+    nodes near coords align={vertical},
+    ]
+\addplot coordinates {(DFS,879) (BFS,1549) (A*,3) (HC,2)};
+\addplot coordinates {(DFS,101) (BFS,0.2) (A*,36) (HC,37)};
+\addplot coordinates {(DFS,352) (BFS,643) (A*,0.1) (HC,0.2)};
+\legend{Path size,E. Time(ms),Cost/1000}
+\end{axis}
+\label{tab:bc}
+\end{tikzpicture}
+\caption{Algorithm performance comparison}
+\end{figure}
+\section{Conclusions}
+
+\newpage
+\KOMAoptions{paper=landscape,pagesize}
+\recalctypearea
 
 \begin{landscape}
 \begin{longtable}[c]{|c|c|l|l|l|l|l|l|l|l|l|l|l|l|}
@@ -435,55 +521,13 @@ The code is also available in the following Github repository \href{https://gith
   \cellcolor[HTML]{9B9B9B}{\color[HTML]{333333} \textbf{2.642}} &
   \textbf{37.553} &
   \textbf{2056.114} \\ \hline
-\caption{Table of results }
+\caption{Table of results when testing the 4 algorithms in 14 different experiments, in the last row the average of each column is shown.}
 \label{tab:my-table}\\
 \end{longtable}
 \end{landscape}
 
 
-\begin{tikzpicture}
-\begin{axis}[
-    ybar,
-    enlargelimits=0.15,
-    legend style={at={(0.5,-0.15)},
-      anchor=north,legend columns=-1},
-    ylabel={Average},
-    symbolic x coords={DFS,BFS,A*,HC},
-    xtick=data,
-    nodes near coords,
-    nodes near coords align={vertical},
-    ]
-\addplot coordinates {(DFS,879) (BFS,1549) (A*,3) (HC,2)};
-\addplot coordinates {(DFS,101) (BFS,0.2) (A*,36) (HC,37)};
-\addplot coordinates {(DFS,352) (BFS,643) (A*,0.1) (HC,0.2)};
-\legend{Path size,E. Time(ms),Cost/1000}
-\end{axis}
-\end{tikzpicture}
 
-
-\subsection{Comparison}
-Following \cite{Maharshi2018ComparativeAO}, \cite{HLweb} and \cite{stuart2003artificial}, the performance of the algorithms can be compared based on the following parameters:
-\begin{itemize}
-    \item Time complexity: Time taken to find a solution.
-    \item Space complexity: Memory required to perform the search.
-    \item Optimality: Solution provided by the algorithm will always be optimal or not.
-    \item Completeness: Always find the solution if it exists?
-\end{itemize}
-\begin{longtable}[c]{|c|c|c|c|c|}
-\hline
-\textbf{Algorithm}        & \textbf{DFS} & \textbf{BFS} & \textbf{A*} & \textbf{Hill Climbing} \\ \hline
-\endhead
-%
-\textbf{Time Complexity}  & $O(b^{m})$   & $O(b^{d})$   & $O(b^{m})$  & $O(\infty)$            \\ \hline
-\textbf{Space Complexity} & $O(bm)$      & $O(b^{d})$   & $O(b^{m})$  & $O(b^{m})$             \\ \hline
-\textbf{Optimality}       & No           & Yes          & Yes         & No                     \\ \hline
-\textbf{Completeness}     & No           & Yes          & Yes         & No                     \\ \hline
-\caption{}
-\label{tab:my-table}\\
-\end{longtable}
-
-
-\section{Conclusions}
 
 \clearpage
 \bibliographystyle{sbc}
@@ -493,7 +537,7 @@ Following \cite{Maharshi2018ComparativeAO}, \cite{HLweb} and \cite{stuart2003art
 \begin{appendices}
   \section{Appendix: Main full code}
   \label{appendix:main}
-  \lstinputlisting[language=C++, caption=Hill Climbing algorithm]{codes/main.cpp}
+  \lstinputlisting[language=C++, caption=Complete structure of the program, includes the graphic part. The codes of each method are in separate files.]{codes/main.cpp}
 \end{appendices}
 \includepdf{Template_SBC/contra-capa.pdf}
 \end{document}
