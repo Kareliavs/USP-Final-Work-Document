@@ -60,179 +60,114 @@
 \maketitle
 
 \begin{abstract}
-
+This paper aims to compare the depth-first search, breadth-first search, A * and hill climbing algorithms applied to the path planning problem between two points. For this, all the methods were implemented and they were tested in random graphs with a different number of nodes, these graphs can be complete or not. The program allows to visualize the graph and to know the execution time, the cost and the length of the path, data that are contrasted with theoretical parameters to determine which one best suits the problem. 
 \end{abstract}
-
 \section{Introduction}
 Road planning is a widely investigated problem, there are multiple investigations such as robotics \cite{shwail2013probabilistic}, route optimization, etc. Likewise, there are different solution algorithms proposed, including informed and non-informed searches, as well as proposals that mix methods such as \cite{felner2003kbfs}.
 
 The objective of the present work is to compare the performance of 4 algorithms, depth-first search, breadth-first search, A* and hill climbing applied in the road planning problem between two points. The implementation allows indicating a number of nodes and choosing between constructing a complete graph or not and provides the routes taken and details of time, cost, etc.
 
-In this work some of the typical problems such as "Shortest path problem" and "Travel Salesman Problem" are explained. Next, two blind search algorithms and two heuristic algorithms are explained. Then implementation details are explained. And finally the results obtained are shown and compared.
-
-
+In this work some of the typical problems such as "Shortest path problem" and "Travel Salesman Problem" are explained. Next, two blind search algorithms and two heuristic algorithms are developed with implementation details. And finally the results obtained are shown and compared.
 
 \section{Path planning problems}
 The routing problem is defined in terms of specified positions and transitions over links between them \cite{russell2004inteligencia}. 
 To represent this type of problem, graphs or trees are used as data structures and the objective is achieved through search algorithms.
-They can vary in the restriction of going through all the points or finding the direct route as the well-known road problem from Arad to Bucharest \cite{russell2004inteligencia}, likewise some methods find any possible way and others try to optimize finding the least expensive solution. Some of the problems are listed below.
-\subsection{Shortest path problem}
-Let $G =  (V, E)$ be a graph with  vertex  set $V$ of size $n$ and arc set $E$ of size $m$. Let $s$ be a distinguished  vertex  of $G$ and let c be a function  assigning a non negative  real valued cost to each arc of $G$. We denote the cost by $c(v,w)$. The single-source shortest path problem is that  of computing, for each vertex  $v$ reachable from  $S$, the cost of a minimum-cost  path  from  $s$ to  $v$ \cite{ahuja1990faster}. 
+They can vary in the restriction of going through all the points or finding the direct route, as the well-known road problem from Arad to Bucharest \cite{russell2004inteligencia}, likewise some methods find any possible way and others try to optimize finding the least expensive solution. Some of the problems are listed below.
 
-There are variations of this problem explained in \cite{dreyfus1969appraisal}; for example the shortest path problem between a specified pair of nodes or between all pair of nodes of a network. In 1959 Dijkstra \cite{dijkstra1959note} described The most efficient procedure  for for this problem. 
+    \subsection{Shortest path problem}
+    Let $G =  (V, E)$ be a graph with  vertex  set $V$ of size $n$ and arc set $E$ of size $m$. Let $s$ be a distinguished  vertex  of $G$ and let c be a function  assigning a non negative  real valued cost to each arc of $G$. We denote the cost by $c(v,w)$. The single-source shortest path problem is that  of computing, for each vertex  $v$ reachable from  $s$, the cost of a minimum-cost  path  from  $s$ to  $v$ \cite{ahuja1990faster}. 
+    There are variations of this problem explained in \cite{dreyfus1969appraisal}; for example the shortest path problem between a specified pair of nodes or between all pair of nodes of a network. In 1959, Dijkstra \cite{dijkstra1959note} described the most efficient procedure for for this problem. 
+    
+    \subsection{Travel Salesman Problem}
+    \cite{little1963algorithm} describe this problem as a salesman, starting in one city, wishes to visit each of $n-1$ other cities and return to the start. And the question is; in what order should he visit the cities to minimize the total distance traveled? Distance (time or cost) or costs between all city pairs are presumed known.
+    It is closely related to the hamiltonian-cycle problem and that's why it's considered NP-complete \cite{cormen2009introduction}. Reference \cite{bellmore1968traveling} discusses methods of solution including Dynamic Programming.
 
-\subsection{Travel Salesman Problem}
-\cite{little1963algorithm} describe this problem as s salesman, starting in one city, wishes to visit each of n-1 other cities and return to the start. In what order should he visit the cities to minimize the total distance traveled? Distance (time or cost) or costs between all city pairs are presumed known.
-
-It is closely related to the hamiltonian-cycle problem and that's why it's considered NP-complete \cite{cormen2009introduction}. Reference \cite{bellmore1968traveling} discusses methods of solution including Dynamic Programming.
-
-\section{Algorithms}
+\section{Search algorithms}
 There are different algorithms for traversing or searching tree or graph data structures. For the search task, they can be grouped into blind search algorithms and algorithms of heuristic search.
 
-\subsection{Blind Search Algorithms (Uninformed)}
-According to \cite{russell2004inteligencia}, these strategies do not have additional information on states, as well as those provided by the definition of the problem. All search strategies are distinguished by the order in which we are expanded. An example shows DFS and BFS.
+    \subsection{Blind Search Algorithms (Uninformed)}
+    According to \cite{russell2004inteligencia}, these strategies do not have additional information on states, as well as those provided by the definition of the problem. All search strategies are distinguished by the order in which we are expanded. An example shows DFS and BFS.
 
-\subsubsection{Depth-first search (DFS)}
-It was invented by Charles Pierre Trémaux (1859-1882) \cite{tremaux2010ecole} as a maze solving algorithm.
-This algorithm implies, to search “deeper” in the graph whenever possible \cite{cormen2009introduction} and
-considers the following choice rule: when selecting an
-edge to traverse, always choose an edge emanating from the vertex most recently reached which still has unexplored edges \cite{tarjan1972depth}.
-It is neither complete nor optimal, but it has linear spatial complexity \cite{russell2004inteligencia}.
+        \subsubsection{Depth-first search (DFS)}
+        It was invented by Charles Pierre Trémaux (1859-1882) \cite{tremaux2010ecole} as a maze solving algorithm.
+        This method implies, to search “deeper” in the graph whenever possible \cite{cormen2009introduction} and
+        considers the following choice rule: when selecting an edge to traverse, always choose an edge emanating from the vertex most recently reached which still has unexplored edges \cite{tarjan1972depth}.
+        It is neither complete nor optimal, but it has linear spatial complexity \cite{russell2004inteligencia}. In implementation terms it uses one LIFO (Last In, First Out) stack, it means that the most recently generated node is chosen for expansion \cite{russell2004inteligencia}.
+        
+        In the function \ref{DFS} is the implementation of the algorithm, it is considered a vector of booleans (\textit{visited}) to mark the nodes already visited and a stack (\textit{stack}). To start, the first node (\textit{coord\_ini}) is introduced to the stack. It then enters a loop that runs as long as the stack has elements to test or the target node (\textit{coord\_fin}) has not been found.
+        In this loop the top node of the stack is extracted, this ensures the FIFO structure. It is verified if it has been visited. If it has not been visited yet, it is marked as visited and iterates through all its adjacencies adding them to the stack. The program will stop when it has found its target or in the worst case, when going through the whole tree it does not find the node indicated.
+        \lstinputlisting[label=DFS,language=C++, caption=C ++ implementation of the DFS algorithm using a stack.]{codes/DFS.hpp}
 
-In implementation terms it uses one LIFO stack, it means that the most recently generated node is chosen for expansion \cite{russell2004inteligencia}.
+        \subsubsection{Breadth-first search (BFS)}
+        This method selects the shallow nodes for expansion; it is complete, great for unit cost steps, but it has exponential time complexity \cite{russell2004inteligencia}.
+        While the depth search uses a LIFO, the breadth search uses a FIFO (First In, First Out) or queue. 
+        
+        For implementation \ref{BFS}, a queue is used to ensure FIFO behavior, it is started by doing push\_back of the start node. Then it goes into a loop that works as long as this queue has elements. Inside the loop, the node that has been in the queue for the longest time is obtained. If it has not been visited before, the visit is marked and its adjacencies are added to the queue. It also checks if the target node is between the adjacencies to stop the search.
+        \lstinputlisting[label=BFS,language=C++, caption=Implementation of the BFS algorithm in C ++ using a queue.]{codes/BFS.hpp}
 
-\lstinputlisting[language=C++, caption=DFS algorithm]{codes/DFS.hpp}
-%\clearpage
-\subsubsection{Breadth-first search (BFS)}
-This method selects the shallow nodes for expansion; it is complete, great for unit cost steps, but it has exponential time complexity \cite{russell2004inteligencia}.
-While the bradth search uses a FIFO, the depth search uses a LIFO. 
-\lstinputlisting[language=C++, caption=BFS algorithm]{codes/BFS.hpp}
+    \subsection{Heuristic Search Algorithms (Informed)}
+    According to \cite{russell2004inteligencia}, an informed search strategy uses knowledge of a specific problem in addition to the definition of the problem itself and can find solutions more efficiently than a search strategy without information. In the case of path problem, they know if a non-objective state is “more promising” than another. It includes hill climbing, steepest hill climbing, A*, AO*, and Best First Search algorithms \cite{Maharshi2018ComparativeAO}.
+        \subsubsection{A*}
+        This method is the most widely know form of solution to the search for the best choice.
+        It evaluates the nodes by combining:
+        \begin{itemize}
+            \item $g(n)$: the cost to reach the node. 
+            \item $h(n)$: the cost to get from the node to the objective.
+        \end{itemize}
+        \begin{center}
+            $f(n) = g(n) + h(n)$
+        \end{center}
+        So $f(n)$ is the estimated cost of the solution with the lowest cost through $n$.
+        To find the lowest cost solution, it would be reasonable to try the node with the lowest value of $f(n)$ . As long as the heuristic function $h(n)$ satisfies certain conditions, the A * search will be complete and optimal. The algorithm is identical to the uniform cost search, except that A * uses $g + h$ instead of $g$ \cite{russell2004inteligencia}.
+        
+        For the implementation \ref{aa} of A*, the function 'a\_asterisk' receives a graph in the form of an adjacency matrix with the calculated distances between nodes.
+        The variable 'origin' will initially be the starting node, but it will advance to the different nodes of the route. Then a loop is executed until the target node is found, in which it is checked if the node has been visited and the best successor node is obtained with the function 'near\_a'. 
+        'near\_a' receives a node as a parameter and iterates through all its neighbors, calculates the distance (or the cost if the graph were weighted) of each neighbor to the target node (dist) this would be $h(n)$, in addition to the distance of the node parameter to its neighbor(grafo[origin][i]) that would be $g(n)$. Then it is checked if the sum of both is less than the local minimum to establish it as a new minimum. After traversing all the neighbors, the best neighbor is returned and the parameter node is marked as traversed.
+        \lstinputlisting[label=aa,language=C++, caption= Implementation of the A * algorithm in C ++]{codes/Aasterisk.hpp}
 
-\subsection{Heuristic Search Algorithms (Informed)}
-According to \cite{russell2004inteligencia},an informed search strategy uses knowledge of a specific problem in addition to the definition of the problem itself and can find solutions more efficiently than a search strategy without information. In the case of path problem, they know if a non-objective state is “more promising” than another.
+        \subsubsection{Hill Climbing}
+        It is a mathematical optimization technique which belongs to the family of local search. It is simply a repetitive loop that moves continuously towards increasing value, that is, up the slope. The algorithm ends when it reaches a “peak” where no neighbor has a higher value. The algorithm does not maintain a search tree and, therefore, the data structure of the current node only needs to record the state and value of its objective function \cite{russell2004inteligencia}. It is similar to optimizing a function, looking for the combination of parameter values that make the function assume the best value.
+        
+        It works as follows; search among the closest nodes the closest to the target, select it and go towards it. The radius of vision is now limited to the proximity of the current node. Repeat the process. 
+        The implementation \ref{hc} follows the same structure as the A *. It has a different heuristic function, it considers as the best successor node the one with the smallest distance to the target node, that is, it does not take into account the distance from its predecessor, thus reducing its field of vision, it is verified that it is a local search algorithm.
+        \lstinputlisting[label=hc,language=C++, caption=C ++ implementation of the hill climbing algorithm.]{codes/HillClimbing.hpp}
 
-\subsubsection{A*}
-This method it them most widely know form of solution to the search for the best choice.
-It evaluates the nodes by combining:
-\begin{itemize}
-    \item $g(n)$, the cost to reach the node. Gives the cost of the path from the initial node to the node n
-    \item $h(n)$, the cost to get from the node to the objective
-\end{itemize}
-\begin{center}
-    $f(n) = g(n) + h(n)$
-\end{center}
+\section{Implementation pipeline}
+This section gives some details of the program, which is written entirely in C ++ and is made up of; a main.cpp file added in the first appendix \ref{appendix:main} and 4 files containing the 4 methods, the code and explanation of them was already given in the previous section.
 
-So $f(n)$ is the estimated cost of the solution with the lowest cost through $n$.
-To find the lowest cost solution,it would be reasonable to try the node with the lowest value of $f(n)$ . As long as the heuristic function $h(n)$ satisfies certain conditions, the A * search will be complete and optimal. The algorithm is identical to the uniform cost search, except that A * uses $g + h$ instead of $g$ \cite{russell2004inteligencia}.
-\lstinputlisting[language=C++, caption=A* algorithm]{codes/Aasterisk.hpp}
+The program allows creating a complete or incomplete graph with a number of nodes indicated, this graph is used to test the 4 methods already explained and returns the path, the path length, the execution time and cost (distance). The distance considered is the Euclidean of the random points distributed in 2D space.
+It is also accompanied by the display of the graph and it is possible to alternate between the paths with different letters. In the figure \ref{fig:exampleFig1} it is possible to see the program interface and the data it shows.
 
-\subsubsection{Hill Climbing}
-\lstinputlisting[language=C++, caption=Hill Climbing algorithm]{codes/HillClimbing.hpp}
-
-\subsection{Comparison}
-Following \cite{Maharshi2018ComparativeAO}, \cite{HLweb} and \cite{stuart2003artificial}, the performance of the algorithms can be compared based on the following parameters:
-\begin{itemize}
-    \item Time complexity: Time taken to find a solution.
-    \item Space complexity: Memory required to perform the search.
-    \item Optimality: Solution provided by the algorithm will always be optimal or not.
-    \item Completeness: Always find the solution if it exists?
-\end{itemize}
-\begin{longtable}[c]{|c|c|c|c|c|}
-\hline
-\textbf{Algorithm}        & \textbf{DFS} & \textbf{BFS} & \textbf{A*} & \textbf{Hill Climbing} \\ \hline
-\endhead
-%
-\textbf{Time Complexity}  & $O(b^{m})$   & $O(b^{d})$   & $O(b^{m})$  & $O(\infty)$            \\ \hline
-\textbf{Space Complexity} & $O(bm)$      & $O(b^{d})$   & $O(b^{m})$  & $O(b^{m})$             \\ \hline
-\textbf{Optimality}       & No           & Yes          & Yes         & No                     \\ \hline
-\textbf{Completeness}     & No           & Yes          & Yes         & No                     \\ \hline
-\caption{}
-\label{tab:my-table}\\
-\end{longtable}
-
-
-\section{Implementation details}
-\begin{lstlisting}[language=C++, caption=Build graph and tree]
-void Build_graph()
-{	
-	//Empty matrix
-	vector<float> vect;	
-	for(int i=0; i<dots.size();i++)
-		vect.push_back(0);	
-	for(int i=0; i<dots.size();i++)
-		grafo.push_back(vect);
-	float d;
-	//Adjacence matrix
-	for(int i=0; i<dots.size();i++)
-	{	vector<int> adj;
-		for(int j=0; j<dots.size();j++)
-		{   
-			d=distance(dots[i].first,dots[j].first,dots[i].second,dots[j].second);
-			if(d<limit)
-			{
-				grafo[i][j]=d;
-				edges.push_back(make_pair(make_pair(dots[i].first,dots[i].second),make_pair(dots[j].first,dots[j].second)));///Grafico
-				adj.push_back(j);
-			}
-		}
-		graph.push_back(adj);
-	}
-}
-
-void Build_tree()
-{
-	for(int i=0; i<dots.size();i++)
-	{	
-		vector<int> sons;
-		for(int j=i; j<dots.size();j++)
-		{
-			if(grafo[i][j]<limit)
-				sons.push_back(j);
-		}
-		tree.push_back(sons);
-	}	
-}
-\end{lstlisting}
-\begin{lstlisting}[language=C++, caption=Build graph and tree]
-    cout<<"Number of dots"<<endl;
-    cin>>N_DOTS;
-    cout<<endl<<"Complete graph? (y/n)"<<endl;
-    char yn;
-    cin>>yn;
-    if(yn=='n')limit=N_DOTS*0.8;
-    cout<<endl<<"Press key to algorithm path"<<endl;
-    cout<<"d ---> DFS "<<endl; 
-    cout<<"b ---> BFS "<<endl;
-    cout<<"a ---> A* "<<endl;
-    cout<<"h ---> Hill Climbing "<<endl;
-    
-    srand(time(NULL));
-    ///Random dots
-    for(int i=0; i<N_DOTS; ++i)
-    {
-        float auxx=rand()%N_DOTS-rand()%N_DOTS;
-        float auxy=rand()%N_DOTS-rand()%N_DOTS;
-		dots.push_back(make_pair(auxx,auxy));
-    }
-    coord_ini=0;
-    coord_fin=rand()%N_DOTS;
-    start = dots[coord_ini];
-    meta = dots[coord_fin];
-    
-    Build_graph();
-    Build_tree();
-  	Algorithms();
-\end{lstlisting}
-\subsection{Cost}
-The cost of a path is the sum of the costs of its edges.\cite{ahuja1990faster}
-\subsection{Visualization}
-
+Below is the pipeline and also the reference to the code attached in appendix \ref{appendix:main}.
+\begin{enumerate}
+    \subsection{Input}
+    \item The user is asked to enter the number of nodes for the construction of the graph. (main function line 277)
+    \item It is possible to choose between the option of constructing a complete graph, with all the nodes interlaced with each other, or incomplete. (main function line 280)
+    \item The menu is displayed to be able to change the graph of the path corresponding to each method. (main function lines 282:286)
+    \subsection{Processing}
+    \item For each node 2 random numbers are generated that will be the coordinates (x, y), they are stored. (main function lines 289:294)
+    \item An initial node and random destination are established, among those already generated. (main function lines 295:298)
+    \item The 'Build\_graph' function is called to construct the graph. First generate an empty matrix of $n*n$. Then an adjacency matrix is generated containing the node-to-node distance. If the graph is complete, all the nodes will be linked, but if it is incomplete, the criterion taken is as follows. A tolerated limit distance is established between nodes to create an edge, in case the nodes are very distant, their union is not considered. (main function line 300 and Buil\_graph function lines 25:49)
+    \item The 'Build\_tree' function is called, which builds the tree aided by the information in the graph. For each node it verifies its adjacencies and it is saved in a node and adjacency vector correlation. To avoid cycles and that the tree is very big, the following is done; all nodes are traversed with a for but only the adjacencies are verified from the position occupied by that node onwards. This could cause adjacencies to be lost, but they are actually considered in previous iterations. In addition to ensuring operation, the initial node will be at position 0 so that there is a path to its successors, another resource may be to ensure that the initial node has a lower position than the final node.(main function line 301 and Buil\_tree function lines 51:63)
+    \item The function 'Algorithms' is called, which executes each of the methods in the following order DFS, BFS, A * and Hill Climbing. Stores each of the paths get the data. 
+    \subsection{Output}
+    \item Program displays the complete path, the length, the execution time and the cost, which in this case is the accumulated distance, using the 'Path' function. (main function line 302 and Algorithms function lines 93:133)
+    \item The cost of a path is the sum of the costs of its edges.\cite{ahuja1990faster}. To compute it, it iterates through the points traveled and the distance between them is calculated in an accumulated sum.  (Path function lines 75:94)
+    \subsection{Visualization}
+    \item The graph, its nodes and vertices are visually displayed. The initial node is highlighted with red and the target node is white, the path is also distinguished in orange. Since displaying all paths is confusing, you can toggle to display each with its initial letter (d, b, a, h). You can also zoom to better visualize large graphs.The OpenGL Utility Toolkit (GLUT) Programming Interface \cite{kilgard1996opengl} was used for this representation. (Different functions lines 135:272)
+\end{enumerate}
+The code is also available in the following Github repository \href{https://github.com/Kareliavs/-USP-IA-FinalWork}
 \begin{figure}[ht]
 \centering
-\includegraphics[width=1.0\textwidth]{Template_SBC/template-latex/screen1.png}
+\includegraphics[width=1.0\textwidth]{Template_SBC/template-latex/screen.png}
 \caption{A typical figure}
 \label{fig:exampleFig1}
 \end{figure}
+
+
+
+\section{Experiments, results and comparison}
+
 
 \begin{figure}[ht]
 \centering
@@ -250,8 +185,6 @@ The cost of a path is the sum of the costs of its edges.\cite{ahuja1990faster}
 \label{fig:exampleFig2}
 \end{figure}
 
-
-\section{Results}
 
 \begin{landscape}
 \begin{longtable}[c]{|c|c|l|l|l|l|l|l|l|l|l|l|l|l|}
@@ -527,6 +460,29 @@ The cost of a path is the sum of the costs of its edges.\cite{ahuja1990faster}
 \end{axis}
 \end{tikzpicture}
 
+
+\subsection{Comparison}
+Following \cite{Maharshi2018ComparativeAO}, \cite{HLweb} and \cite{stuart2003artificial}, the performance of the algorithms can be compared based on the following parameters:
+\begin{itemize}
+    \item Time complexity: Time taken to find a solution.
+    \item Space complexity: Memory required to perform the search.
+    \item Optimality: Solution provided by the algorithm will always be optimal or not.
+    \item Completeness: Always find the solution if it exists?
+\end{itemize}
+\begin{longtable}[c]{|c|c|c|c|c|}
+\hline
+\textbf{Algorithm}        & \textbf{DFS} & \textbf{BFS} & \textbf{A*} & \textbf{Hill Climbing} \\ \hline
+\endhead
+%
+\textbf{Time Complexity}  & $O(b^{m})$   & $O(b^{d})$   & $O(b^{m})$  & $O(\infty)$            \\ \hline
+\textbf{Space Complexity} & $O(bm)$      & $O(b^{d})$   & $O(b^{m})$  & $O(b^{m})$             \\ \hline
+\textbf{Optimality}       & No           & Yes          & Yes         & No                     \\ \hline
+\textbf{Completeness}     & No           & Yes          & Yes         & No                     \\ \hline
+\caption{}
+\label{tab:my-table}\\
+\end{longtable}
+
+
 \section{Conclusions}
 
 \clearpage
@@ -535,7 +491,8 @@ The cost of a path is the sum of the costs of its edges.\cite{ahuja1990faster}
 \clearpage
 
 \begin{appendices}
-  \section{Consectetur adipiscing elit}
+  \section{Appendix: Main full code}
+  \label{appendix:main}
   \lstinputlisting[language=C++, caption=Hill Climbing algorithm]{codes/main.cpp}
 \end{appendices}
 \includepdf{Template_SBC/contra-capa.pdf}
